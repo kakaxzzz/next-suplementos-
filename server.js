@@ -19,7 +19,8 @@ const path = require('path');
 const db = require('./db');
 const { hashPassword, verifyPassword, generateToken } = require('./auth');
 
-const PORT = 3000;
+// No Render (e outros serviços), a porta vem da variável PORT.
+const PORT = process.env.PORT || 3000;
 const SESSION_DURATION_HOURS = 24 * 7; // token válido por 7 dias
 const PUBLIC_DIR = path.join(__dirname, 'public');
 

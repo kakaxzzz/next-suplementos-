@@ -1,0 +1,12 @@
+# Configuração para o Render (render.com).
+# No painel do Render: New > Blueprint > escolha este repositório.
+services:
+  - type: web
+    name: next-suplementos
+    runtime: node
+    plan: free
+    buildCommand: "true"
+    startCommand: node server.js
+    envVars:
+      - key: NODE_VERSION
+        value: "22"

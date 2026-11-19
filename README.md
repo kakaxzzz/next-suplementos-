@@ -58,6 +58,23 @@ continuam lá na próxima vez que você rodar `node server.js`.
 - **Sair** (`POST /api/logout`): invalida o token, então ele para de
   funcionar.
 
+## Chat "Precisa de ajuda?" (assistente com IA)
+
+O botão no canto da tela abre um chat. As mensagens vão para
+`POST /api/chat` (arquivo `chat.js`), que repassa para uma IA junto com
+as regras de atendimento e a lista de produtos.
+
+Pra ligar a IA, configure estas variáveis de ambiente no servidor:
+
+| Variável     | Pra que serve                         | Padrão            |
+|--------------|---------------------------------------|-------------------|
+| `AI_API_KEY` | chave da IA (obrigatória)             | —                 |
+| `AI_API_URL` | endereço da IA                        | Google Gemini     |
+| `AI_MODEL`   | modelo usado                          | `gemini-2.5-flash`|
+
+Sem `AI_API_KEY`, o chat responde só com respostas prontas para as
+perguntas mais comuns (pagamento, frete, rastreio etc.).
+
 ## O que ainda falta (próximas partes)
 
 - Produtos e estoque vindo do banco de dados (hoje ainda estão fixos

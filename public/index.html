@@ -2465,7 +2465,6 @@ const STORE_CONTACT = {
   whatsapp: "5511900000000",                 // só números, com 55 + DDD
   phone: "(11) 90000-0000",
   email: "contato@nextsuplementos.com.br",
-  address: "Rua Exemplo, 123 - Bairro / Cidade - UF",
   instagram: "@nextsuplementos",
 };
 const CI = {
@@ -2473,7 +2472,6 @@ const CI = {
   wa:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3.5 20.5l1.3-4.2A8.5 8.5 0 1 1 8 19.4z"/><path d="M9 8.6c0 3.3 3 6.4 6.4 6.4l1.1-1.6-2-1-1 .8c-1-.4-2.2-1.6-2.6-2.6l.8-1-1-2z"/></svg>',
   phone:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z"/></svg>',
   mail:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>',
-  pin:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>',
   ig:'<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>',
 };
 function renderContactInfo(){
@@ -2488,7 +2486,6 @@ function renderContactInfo(){
       <div class="contact-item">${CI.wa}<div><small>WhatsApp</small><a href="https://wa.me/${c.whatsapp}" target="_blank" rel="noopener">${waText}</a></div></div>
       <div class="contact-item">${CI.phone}<div><small>Telefone</small><a href="tel:+${c.whatsapp}">${c.phone}</a></div></div>
       <div class="contact-item">${CI.mail}<div><small>E-mail</small><a href="mailto:${c.email}">${c.email}</a></div></div>
-      <div class="contact-item">${CI.pin}<div><small>Endereço</small>${c.address}</div></div>
       <div class="contact-item">${CI.ig}<div><small>Instagram</small><a href="${SOCIAL_LINKS.instagram}" target="_blank" rel="noopener">${c.instagram}</a></div></div>
     </div>`;
 }

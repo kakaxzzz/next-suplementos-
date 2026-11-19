@@ -1530,8 +1530,8 @@ function renderUserPanel(){
   const u = state.user;
   panel.innerHTML = `
     <div class="user-panel-head">
-      <div class="uname">${u.name}</div>
-      <div class="uemail">${u.email}</div>
+      <div class="uname">${escapeHTML(u.name)}</div>
+      <div class="uemail">${escapeHTML(u.email)}</div>
     </div>
     <div class="user-panel-section">
       <h4>Pedidos em andamento</h4>
@@ -1828,11 +1828,11 @@ function renderProductModal(){
       ${p.reviews.map(r=>`
         <div class="review">
           <div class="review-head">
-            <span class="review-name">${r.name}</span>
+            <span class="review-name">${escapeHTML(r.name)}</span>
             <span class="review-date">${r.date}</span>
           </div>
           <div style="display:flex; gap:2px;">${starRow(r.stars, 13)}</div>
-          <div class="review-text">${r.text}</div>
+          <div class="review-text">${escapeHTML(r.text)}</div>
         </div>
       `).join('')}
     </div>
@@ -2116,9 +2116,9 @@ function renderCheckout(){
       <span class="step-label">Passo 1 de 4</span>
       <h2 class="checkout-title">Endereço de entrega</h2>
       <div class="form-grid-3">
-        <div class="form-row"><label>Nome completo</label><input id="cName" value="${state.user.name}"><div class="field-error" id="err-cName">Preencha o nome completo.</div></div>
+        <div class="form-row"><label>Nome completo</label><input id="cName" value="${escapeHTML(state.user.name)}"><div class="field-error" id="err-cName">Preencha o nome completo.</div></div>
         <div class="form-row"><label>CPF</label><input id="cCpf" placeholder="000.000.000-00"><div class="field-error" id="err-cCpf">CPF inválido — confira os números.</div></div>
-        <div class="form-row"><label>E-mail</label><input id="cEmail" value="${state.user.email}"><div class="field-error" id="err-cEmail">E-mail inválido.</div></div>
+        <div class="form-row"><label>E-mail</label><input id="cEmail" value="${escapeHTML(state.user.email)}"><div class="field-error" id="err-cEmail">E-mail inválido.</div></div>
       </div>
       <div class="form-grid-2">
         <div class="form-row"><label>CEP</label>
@@ -2213,7 +2213,7 @@ function renderCheckout(){
       <div class="confirm-box">
         <div class="confirm-check">✓</div>
         <h2 class="checkout-title" style="margin-bottom:6px;">Pedido confirmado</h2>
-        <p style="color:var(--muted); font-size:14px;">Enviamos os detalhes e o código do pedido para <strong style="color:var(--text);">${state.user.email}</strong>.</p>
+        <p style="color:var(--muted); font-size:14px;">Enviamos os detalhes e o código do pedido para <strong style="color:var(--text);">${escapeHTML(state.user.email)}</strong>.</p>
         <div class="order-code">${state.orderCode}</div>
         <p style="color:var(--muted-2); font-size:12.5px; max-width:380px; margin:0 auto;">Guarde esse código para acompanhar sua entrega. O prazo estimado é de ${state.frete?state.frete.days:'5 a 8'}.</p>
         <button class="btn-primary" style="margin-top:28px;" onclick="closeCheckout()">Voltar à loja</button>

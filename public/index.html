@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NEXT SUPLEMENTOS — Loja</title>
+<!-- Descrição e prévia que aparecem no Google e quando o link é compartilhado
+     (WhatsApp, Instagram). Quando tiver uma imagem de capa, publique-a em
+     public/img/capa.jpg e descomente a linha og:image com o endereço completo. -->
+<meta name="description" content="Whey, creatina, pré-treino e vitaminas das principais marcas, com tabela nutricional e avaliações. Loja 100% online.">
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="NEXT SUPLEMENTOS">
+<meta property="og:title" content="NEXT SUPLEMENTOS">
+<meta property="og:description" content="Whey, creatina, pré-treino e vitaminas das principais marcas. Loja 100% online.">
+<!-- <meta property="og:image" content="https://SEU-SITE.onrender.com/img/capa.jpg"> -->
+<meta name="theme-color" content="#16181B">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -716,6 +727,34 @@ footer{ border-top:1px solid var(--line); padding:40px 28px; margin-top:auto; }
   .chat-form input{ font-size:16px; } /* evita o zoom automático do iPhone ao digitar */
 }
 
+/* ---------- FAIXA DE TESTES, ORDENAR, LINKS DO RODAPÉ, PÁGINAS ---------- */
+.test-banner{
+  background:var(--signal); color:var(--text); text-align:center; font-size:13px; line-height:1.45;
+  padding:9px 16px;
+}
+.sort-box{ display:flex; align-items:center; gap:8px; margin-left:auto; font-size:13px; color:var(--muted); font-weight:600; }
+.sort-box select{
+  background:var(--surface); color:var(--text); border:1px solid var(--line); border-radius:var(--radius);
+  padding:8px 10px; font-size:13px; font-weight:600; font-family:inherit;
+}
+.footer-links{ max-width:1200px; margin:26px auto 0; display:flex; flex-wrap:wrap; gap:8px 22px; font-size:13px; }
+.footer-links a{ color:var(--text); font-weight:600; }
+.footer-links a:hover{ text-decoration:underline; text-underline-offset:3px; }
+.opt{ text-transform:none; letter-spacing:0; color:var(--muted-2); font-weight:400; }
+.info-page{ max-width:68ch; font-size:15px; line-height:1.7; color:var(--text); }
+.info-page h3{ font-family:var(--display); font-weight:800; font-stretch:80%; font-size:20px; margin:28px 0 8px; text-transform:none; }
+.info-page h3:first-child{ margin-top:0; }
+.info-page p{ margin-bottom:12px; color:var(--muted); }
+.info-page ul{ margin:0 0 14px 20px; color:var(--muted); }
+.info-page li{ margin-bottom:6px; }
+.info-page strong{ color:var(--text); }
+.info-page .updated{ font-size:12.5px; color:var(--muted-2); margin-top:28px; padding-top:14px; border-top:1px solid var(--line); }
+.info-page a{ color:var(--text); font-weight:600; text-decoration:underline; text-underline-offset:3px; cursor:pointer; }
+@media (max-width:640px){
+  .sort-box{ margin-left:0; }
+  .test-banner{ font-size:12px; }
+}
+
 /* ---------- CONTATO ---------- */
 .contact-box{ max-width:980px; padding:30px 40px 40px; }
 .breadcrumb{ display:flex; gap:8px; align-items:center; font-size:12.5px; color:var(--muted-2); }
@@ -948,6 +987,10 @@ header.topbar{ border-bottom-color:var(--line); }
 </head>
 <body>
 <div class="app" id="app">
+  <!-- FAIXA DE TESTES: apague este bloco quando a loja abrir de verdade -->
+  <div class="test-banner" role="note">
+    <strong>Site em testes.</strong> Nenhuma compra é cobrada. Use dados inventados: não digite cartão, CPF ou endereço reais.
+  </div>
 
   <!-- HEADER -->
   <header class="topbar">
@@ -994,8 +1037,11 @@ header.topbar{ border-bottom-color:var(--line); }
     <h3>Marcas</h3>
     <div class="menu-brand-row" id="menuBrands"></div>
     <h3>Institucional</h3>
-    <a class="menu-link" onclick="alert('Em breve: a página Quem Somos vai trazer o texto sobre a empresa.')">Quem somos</a>
-    <a class="menu-link" onclick="closeMenu(); openContact()">Contato</a>
+    <a class="menu-link" href="#quem-somos" onclick="closeMenu()">Quem somos</a>
+    <a class="menu-link" href="#contato" onclick="closeMenu()">Contato</a>
+    <a class="menu-link" href="#trocas-e-devolucoes" onclick="closeMenu()">Trocas e devoluções</a>
+    <a class="menu-link" href="#privacidade" onclick="closeMenu()">Política de privacidade</a>
+    <a class="menu-link" href="#termos-de-uso" onclick="closeMenu()">Termos de uso</a>
     <div class="menu-login-cta">
       <button class="btn-outline-lime" onclick="openAuth()">Entrar / Criar conta</button>
     </div>
@@ -1019,6 +1065,14 @@ header.topbar{ border-bottom-color:var(--line); }
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="11" y1="18" x2="13" y2="18"/></svg>
       Filtros
     </button>
+    <label class="sort-box">Ordenar por
+      <select id="sortSelect" onchange="state.sort=this.value; renderGrid();">
+        <option value="relevancia">Mais relevantes</option>
+        <option value="menor">Menor preço</option>
+        <option value="maior">Maior preço</option>
+        <option value="avaliacao">Mais bem avaliados</option>
+      </select>
+    </label>
   </div>
   <div class="filter-panel" id="filterPanel">
     <div class="filter-accordion" id="filterAccordion">
@@ -1103,15 +1157,20 @@ header.topbar{ border-bottom-color:var(--line); }
     <div class="footer-grid">
       <div>
         <div class="brand" style="font-size:20px;"><span class="dot"></span>NEXT SUPLEMENTOS</div>
-        <p class="footer-note">Loja parceira das principais marcas de suplementação do Brasil. Preços, fretes e formas de pagamento em conformidade com as práticas padrão do e-commerce nacional.</p>
+        <p class="footer-note">Loja online de suplementos das principais marcas do Brasil, com tabela nutricional e avaliações de quem já comprou.</p>
       </div>
       <div class="footer-badges">
-        <span>Site seguro SSL</span>
-        <span>Compra protegida</span>
+        <span>Conexão segura (HTTPS)</span>
         <span>Pix • Crédito • Débito</span>
-        <span>Nota fiscal em todos os pedidos</span>
       </div>
     </div>
+    <nav class="footer-links" aria-label="Institucional">
+      <a href="#quem-somos">Quem somos</a>
+      <a href="#contato">Contato</a>
+      <a href="#trocas-e-devolucoes">Trocas e devoluções</a>
+      <a href="#privacidade">Política de privacidade</a>
+      <a href="#termos-de-uso">Termos de uso</a>
+    </nav>
     <!-- Dados da empresa: TROQUE pela razão social e pelo CNPJ reais -->
     <div class="footer-legal">
       <span>© 2026 NEXT SUPLEMENTOS</span>
@@ -1199,6 +1258,16 @@ header.topbar{ border-bottom-color:var(--line); }
           <button class="btn-primary" id="contactSubmit" type="submit">Enviar mensagem</button>
         </form>
       </div>
+    </div>
+  </div>
+
+  <!-- PÁGINAS INSTITUCIONAIS (Quem somos, Trocas, Privacidade, Termos) -->
+  <div class="modal-overlay" id="pageOverlay" onclick="if(event.target===this) closeInfoPage()">
+    <div class="modal-box contact-box">
+      <button class="modal-close" onclick="closeInfoPage()" aria-label="Fechar">&times;</button>
+      <nav class="breadcrumb"><a onclick="closeInfoPage(); goHome();">Início</a><span>›</span><span id="pageCrumb"></span></nav>
+      <h2 class="contact-title" id="pageTitle"></h2>
+      <article class="info-page" id="pageBody"></article>
     </div>
   </div>
 
@@ -1382,6 +1451,7 @@ const state = {
   coupon: null,
   authToken: null,
   favorites: [], // ids dos produtos favoritados
+  sort: "relevancia",
 };
 
 /* ================= RENDER HELPERS ================= */
@@ -1604,6 +1674,7 @@ function doLogout(){
   }
   state.user = null;
   state.authToken = null;
+  saveAuthToken(null);
   closeUserPanel();
 }
 
@@ -1717,6 +1788,9 @@ function renderGrid(){
   if(state.filters.priceMax!=null) list = list.filter(p=>p.price<=state.filters.priceMax);
   if(state.filters.brands.length) list = list.filter(p=>state.filters.brands.includes(p.brand));
   if(state.filters.weights.length) list = list.filter(p=>state.filters.weights.includes(p.weight));
+  if(state.sort==='menor') list = [...list].sort((a,b)=>a.price-b.price);
+  if(state.sort==='maior') list = [...list].sort((a,b)=>b.price-a.price);
+  if(state.sort==='avaliacao') list = [...list].sort((a,b)=>b.rating-a.rating || b.ratingCount-a.ratingCount);
   document.getElementById('gridTitle').textContent = brandFilter ? brandFilter : (state.category==='todos' ? 'Todos os produtos' : CATEGORIES.find(c=>c.id===state.category).label);
   document.getElementById('gridCount').textContent = `${list.length} produto${list.length!==1?'s':''}`;
   const grid = document.getElementById('productGrid');
@@ -1754,6 +1828,8 @@ function pulseCart(){
 /* ================= PRODUCT MODAL ================= */
 function openProduct(id){
   const p = PRODUCTS.find(x=>x.id===id);
+  setRoute('produto-' + slugify(p.name));
+  document.title = p.name + ' | NEXT SUPLEMENTOS';
   state.currentProduct = p;
   state.selectedFlavor = p.flavors[0];
   state.selectedQty = 1;
@@ -1761,7 +1837,11 @@ function openProduct(id){
   renderProductModal();
   document.getElementById('productModalOverlay').classList.add('open');
 }
-function closeProductModal(){ document.getElementById('productModalOverlay').classList.remove('open'); }
+function closeProductModal(){
+  document.getElementById('productModalOverlay').classList.remove('open');
+  document.title = DEFAULT_TITLE;
+  clearRoute('produto-');
+}
 
 function renderProductModal(){
   const p = state.currentProduct;
@@ -1876,6 +1956,7 @@ function addToCart(productId, flavor, qty){
 }
 function removeFromCart(idx){ state.cart.splice(idx,1); renderCartBadge(); renderCart(); }
 function renderCartBadge(){
+  saveCart();
   const count = state.cart.reduce((s,i)=>s+i.qty,0);
   document.getElementById('cartBadge').textContent = count;
 }
@@ -2045,6 +2126,7 @@ async function doLogin(){
     if(!res.ok){ showAuthError('loginError', data.error || 'Não foi possível entrar.'); return; }
     state.user = data.user;
     state.authToken = data.token;
+    saveAuthToken(data.token);
     document.getElementById('loginError').style.display = 'none';
     closeAuth();
     if(pendingCheckout){ pendingCheckout=false; startCheckout(); }
@@ -2069,6 +2151,7 @@ async function doSignup(){
     if(!res.ok){ showAuthError('signupError', data.error || 'Não foi possível criar a conta.'); return; }
     state.user = data.user;
     state.authToken = data.token;
+    saveAuthToken(data.token);
     document.getElementById('signupError').style.display = 'none';
     closeAuth();
     if(pendingCheckout){ pendingCheckout=false; startCheckout(); }
@@ -2137,8 +2220,8 @@ function renderCheckout(){
         <div class="form-row"><label>Cidade</label><input id="cCidade" placeholder="Preenche sozinho ao consultar o CEP"><div class="field-error" id="err-cCidade">Informe a cidade.</div></div>
       </div>
       <div class="form-grid-2">
-        <div class="form-row"><label>Complemento</label><input id="cComp" placeholder="Apto, bloco, casa..."><div class="field-error" id="err-cComp">Informe o complemento.</div></div>
-        <div class="form-row"><label>Observação de entrega</label><input id="cObs" placeholder="Ex: não entregar após 18h"><div class="field-error" id="err-cObs">Informe uma observação.</div></div>
+        <div class="form-row"><label>Complemento <span class="opt">(opcional)</span></label><input id="cComp" placeholder="Apto, bloco, casa..."></div>
+        <div class="form-row"><label>Observação de entrega <span class="opt">(opcional)</span></label><input id="cObs" placeholder="Ex: não entregar após 18h"></div>
       </div>
       <div class="btn-row">
         <button class="btn-primary wide" style="flex:1; text-align:center;" onclick="closeCheckout()">Cancelar</button>
@@ -2266,6 +2349,10 @@ async function autofillCep(rawCep){
     }catch(err){ /* nenhuma das duas fontes respondeu */ }
   }
 
+  // Se a pessoa já avançou pra próxima etapa enquanto o CEP carregava,
+  // a tela do endereço não existe mais: não há o que preencher.
+  if(!statusEl || !document.body.contains(statusEl)) return;
+
   if(!found){
     statusEl.textContent = 'Não consegui consultar o CEP agora (sem conexão com o serviço de CEP). Preencha rua, bairro e cidade manualmente.';
     markField('cCep', true, 'Busca automática bloqueada neste ambiente. Veja a explicação no chat sobre como testar isso corretamente — por enquanto, preencha rua, bairro e cidade na mão.');
@@ -2317,7 +2404,7 @@ function goStep2(){
   const obs = document.getElementById('cObs').value.trim();
 
   let ok = true;
-  [['cName',name],['cCep',cep],['cNum',num],['cRua',rua],['cBairro',bairro],['cCidade',cidade],['cComp',comp],['cObs',obs]].forEach(([id,val])=>{
+  [['cName',name],['cCep',cep],['cNum',num],['cRua',rua],['cBairro',bairro],['cCidade',cidade]].forEach(([id,val])=>{
     const invalid = !val;
     markField(id, invalid);
     if(invalid) ok = false;
@@ -2501,6 +2588,7 @@ function renderContactInfo(){
     </div>`;
 }
 function openContact(){
+  setRoute('contato');
   renderContactInfo();
   document.getElementById('contactOverlay').classList.add('open');
   if(state.user){
@@ -2509,7 +2597,7 @@ function openContact(){
     if(!e.value) e.value = state.user.email;
   }
 }
-function closeContact(){ document.getElementById('contactOverlay').classList.remove('open'); }
+function closeContact(){ document.getElementById('contactOverlay').classList.remove('open'); clearRoute('contato'); }
 function maskPhone(el){
   const d = el.value.replace(/\D/g,'').slice(0,11);
   el.value = d.length>10 ? d.replace(/(\d{2})(\d{5})(\d{0,4})/,'($1) $2-$3')
@@ -2645,6 +2733,179 @@ function chatFallback(q){
   return 'Ainda estou aprendendo e não consegui entender sua dúvida. Posso ajudar com formas de pagamento, prazo de entrega, rastreio de pedido e informações sobre os produtos.';
 }
 
+/* ================= PÁGINAS INSTITUCIONAIS ================= */
+// Textos PROVISÓRIOS. Antes de abrir a loja, revise com seu contador ou advogado
+// e troque os trechos entre [colchetes].
+const INFO_PAGES = {
+  "quem-somos": { title:"Quem somos", html:`
+    <h3>A NEXT</h3>
+    <p>A NEXT SUPLEMENTOS é uma loja 100% online de suplementos alimentares. Reunimos whey protein, creatina, pré-treino, hipercalóricos e vitaminas das marcas que quem treina já conhece e confia.</p>
+    <p>Em cada produto você encontra a tabela nutricional completa, a descrição de para que ele serve e as avaliações de quem já comprou. A ideia é você escolher com informação, sem precisar adivinhar.</p>
+    <h3>Como trabalhamos</h3>
+    <ul>
+      <li>Produtos originais, comprados de distribuidores autorizados [confirmar].</li>
+      <li>Pagamento por Pix, cartão de crédito ou débito.</li>
+      <li>Envio para todo o Brasil, com código de rastreio.</li>
+      <li>Atendimento pelo WhatsApp, e-mail e pelo chat do site.</li>
+    </ul>
+    <p>[Conte aqui a história da NEXT: quem começou, por quê e o que vocês querem ser para quem treina.]</p>` },
+
+  "trocas-e-devolucoes": { title:"Trocas e devoluções", html:`
+    <h3>Desistiu da compra?</h3>
+    <p>Pelo Código de Defesa do Consumidor (art. 49), em compras feitas pela internet você pode desistir em até <strong>7 dias corridos depois de receber o pedido</strong>, sem precisar explicar o motivo.</p>
+    <ul>
+      <li>O produto precisa estar <strong>lacrado</strong>, sem uso, na embalagem original e com a nota fiscal.</li>
+      <li>Fale com a gente pela <a href="#contato">página de Contato</a> ou pelo WhatsApp informando o código do pedido (SUP-XXXXXX).</li>
+      <li>Enviamos as instruções de postagem. O frete de devolução é por nossa conta.</li>
+      <li>O reembolso é feito pela mesma forma de pagamento: Pix em até [X] dias úteis depois que o produto chegar; no cartão, o estorno aparece em até duas faturas, conforme o banco.</li>
+    </ul>
+    <h3>Produto com defeito ou avariado</h3>
+    <p>Suplementos são produtos não duráveis: você tem <strong>30 dias a partir do recebimento</strong> para reclamar de defeito (art. 26 do CDC). Se a embalagem chegar violada, amassada ou com o lacre rompido, recuse a entrega ou nos avise em até [48 horas] com fotos.</p>
+    <p>Nesses casos, você escolhe: troca pelo mesmo produto, outro produto de mesmo valor ou o dinheiro de volta.</p>
+    <h3>Produto errado</h3>
+    <p>Se chegou um sabor, tamanho ou produto diferente do que você pediu, avise em até 7 dias que fazemos a troca sem custo.</p>
+    <h3>Não aceitamos devolução de</h3>
+    <ul>
+      <li>Produtos abertos ou usados, a não ser em caso de defeito.</li>
+      <li>Produtos sem a embalagem original ou sem a nota fiscal.</li>
+    </ul>` },
+
+  "privacidade": { title:"Política de privacidade", html:`
+    <p>Esta política explica quais dados pessoais a NEXT SUPLEMENTOS coleta, para que usa e quais são os seus direitos, de acordo com a Lei Geral de Proteção de Dados (Lei 13.709/2018, LGPD).</p>
+    <h3>Dados que coletamos</h3>
+    <ul>
+      <li><strong>Cadastro:</strong> nome, e-mail e senha (guardada embaralhada, nunca em texto puro).</li>
+      <li><strong>Compra:</strong> CPF, telefone e endereço de entrega.</li>
+      <li><strong>Contato:</strong> o que você escreve no formulário de contato ou no chat.</li>
+      <li><strong>Navegação:</strong> a sacola e os favoritos ficam guardados no seu próprio navegador.</li>
+    </ul>
+    <h3>Para que usamos</h3>
+    <ul>
+      <li>Processar e entregar seus pedidos e emitir a nota fiscal.</li>
+      <li>Enviar avisos sobre o pedido (confirmação, envio e rastreio).</li>
+      <li>Responder suas dúvidas.</li>
+      <li>Prevenir fraudes e cumprir obrigações legais.</li>
+    </ul>
+    <h3>Com quem compartilhamos</h3>
+    <p>Só com quem é necessário para a compra acontecer: a empresa de pagamento, a transportadora e o sistema de emissão de nota fiscal. Os dados do cartão são digitados direto na empresa de pagamento e não ficam guardados na NEXT. Não vendemos seus dados.</p>
+    <p>As mensagens do chat são processadas por um serviço de inteligência artificial para gerar as respostas. Não escreva dados pessoais ou de pagamento no chat.</p>
+    <h3>Seus direitos</h3>
+    <p>Você pode pedir a qualquer momento para ver, corrigir ou apagar seus dados, ou saber com quem eles foram compartilhados. Basta escrever pela <a href="#contato">página de Contato</a>. Alguns dados, como os da nota fiscal, precisam ser mantidos pelo prazo que a lei exige.</p>
+    <h3>Responsável pelos dados</h3>
+    <p>[Razão social], CNPJ [00.000.000/0000-00]. Encarregado de dados: [nome], [e-mail].</p>` },
+
+  "termos-de-uso": { title:"Termos de uso", html:`
+    <h3>Sobre a loja</h3>
+    <p>Este site é operado por [razão social], CNPJ [00.000.000/0000-00]. Ao usar o site e fazer pedidos, você concorda com estes termos.</p>
+    <h3>Cadastro</h3>
+    <p>Para comprar é preciso criar uma conta com dados verdadeiros. A senha é pessoal: não compartilhe com ninguém.</p>
+    <h3>Preços, estoque e pagamento</h3>
+    <ul>
+      <li>Os preços podem mudar sem aviso, mas o valor que vale é o mostrado na hora em que você confirma o pedido.</li>
+      <li>O pedido só é confirmado depois que o pagamento é aprovado.</li>
+      <li>Se um produto acabar depois da compra, avisamos e devolvemos o valor integral.</li>
+      <li>Cupons têm regras e validade próprias e não se somam a outras promoções, a não ser que isso esteja escrito no cupom.</li>
+    </ul>
+    <h3>Entrega</h3>
+    <p>O prazo começa a contar depois da aprovação do pagamento. Você acompanha tudo em "Acompanhar pedido", com o código que enviamos por e-mail.</p>
+    <h3>Sobre os suplementos</h3>
+    <p>As informações do site são de caráter geral e não substituem a orientação de um nutricionista ou médico. Gestantes, lactantes, crianças e pessoas com problemas de saúde devem consultar um profissional antes de usar qualquer suplemento.</p>
+    <h3>Trocas e devoluções</h3>
+    <p>Veja a página de <a href="#trocas-e-devolucoes">Trocas e devoluções</a>.</p>
+    <h3>Dúvidas</h3>
+    <p>Fale com a gente pela <a href="#contato">página de Contato</a>.</p>` },
+};
+function openInfoPage(slug){
+  const pg = INFO_PAGES[slug]; if(!pg) return;
+  setRoute(slug);
+  document.getElementById('pageCrumb').textContent = pg.title;
+  document.getElementById('pageTitle').textContent = pg.title;
+  document.getElementById('pageBody').innerHTML = pg.html + '<p class="updated">Versão provisória · atualizada em novembro de 2026</p>';
+  const ov = document.getElementById('pageOverlay');
+  ov.classList.add('open'); ov.scrollTop = 0;
+  document.title = pg.title + ' | NEXT SUPLEMENTOS';
+}
+function closeInfoPage(){
+  document.getElementById('pageOverlay').classList.remove('open');
+  document.title = DEFAULT_TITLE;
+  clearRoute(null);
+}
+
+/* ================= LINKS PRÓPRIOS (#produto-..., #contato...) ================= */
+// Cada produto e cada página tem um endereço, que dá pra copiar e mandar no
+// WhatsApp, e o botão "voltar" do celular fecha a janela em vez de sair do site.
+const DEFAULT_TITLE = document.title;
+let routePushed = false;
+function slugify(t){
+  return t.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+}
+function setRoute(name){
+  if(location.hash.slice(1) === name) return;
+  if(location.hash.length > 1){ location.replace('#' + name); }   // troca sem empilhar histórico
+  else { routePushed = true; location.hash = name; }
+}
+function clearRoute(prefix){
+  const h = location.hash.slice(1);
+  if(!h || (prefix && !h.startsWith(prefix))) return;
+  if(routePushed){ routePushed = false; history.back(); }
+  else { history.replaceState(null, '', location.pathname + location.search); }
+}
+function route(){
+  const h = decodeURIComponent(location.hash.slice(1));
+  const prodOpen = document.getElementById('productModalOverlay').classList.contains('open');
+  const p = h.startsWith('produto-') ? PRODUCTS.find(x=>'produto-'+slugify(x.name) === h) : null;
+  if(p){ if(!prodOpen || state.currentProduct !== p) openProduct(p.id); }
+  else if(prodOpen){ document.getElementById('productModalOverlay').classList.remove('open'); document.title = DEFAULT_TITLE; }
+
+  const ctOpen = document.getElementById('contactOverlay').classList.contains('open');
+  if(h === 'contato'){ if(!ctOpen) openContact(); }
+  else if(ctOpen){ document.getElementById('contactOverlay').classList.remove('open'); }
+
+  const pgOpen = document.getElementById('pageOverlay').classList.contains('open');
+  if(INFO_PAGES[h]){ openInfoPage(h); }
+  else if(pgOpen){ document.getElementById('pageOverlay').classList.remove('open'); document.title = DEFAULT_TITLE; }
+
+  if(!h) routePushed = false;
+}
+// Se a pessoa saiu da loja pra uma página (clicando num link), o "voltar"
+// deve trazê-la de volta. Quem chegou direto por um link compartilhado não
+// tem pra onde voltar, então aí só limpamos o endereço.
+let lastHash = location.hash.slice(1);
+window.addEventListener('hashchange', ()=>{
+  const h = location.hash.slice(1);
+  if(h && !lastHash) routePushed = true;
+  lastHash = h;
+  route();
+});
+
+/* ================= LOGIN E SACOLA GUARDADOS NO NAVEGADOR ================= */
+const TOKEN_KEY = 'next_token', CART_KEY = 'next_sacola';
+function saveAuthToken(token){
+  try{ token ? localStorage.setItem(TOKEN_KEY, token) : localStorage.removeItem(TOKEN_KEY); }catch(e){}
+}
+async function restoreSession(){
+  let token = null;
+  try{ token = localStorage.getItem(TOKEN_KEY); }catch(e){}
+  if(!token) return;
+  try{
+    const res = await fetch(`${API_BASE}/api/me`, { headers:{ 'Authorization':'Bearer ' + token } });
+    if(res.status === 401){ saveAuthToken(null); return; }   // login vencido
+    const data = await res.json();
+    if(res.ok && data.user){ state.user = data.user; state.authToken = token; }
+  }catch(e){ /* servidor fora do ar: tenta de novo na próxima visita */ }
+}
+function saveCart(){ try{ localStorage.setItem(CART_KEY, JSON.stringify(state.cart)); }catch(e){} }
+function loadCart(){
+  try{
+    const raw = JSON.parse(localStorage.getItem(CART_KEY) || '[]');
+    if(!Array.isArray(raw)) return [];
+    return raw.filter(i=>{
+      const p = PRODUCTS.find(x=>x.id===i.productId);
+      return p && p.flavors.includes(i.flavor) && Number.isInteger(i.qty) && i.qty>0 && i.qty<100;
+    });
+  }catch(e){ return []; }
+}
+
 /* ================= INIT ================= */
 // A faixa de categorias "gruda" logo abaixo do topo; aqui medimos a altura
 // real do topo pra ela encaixar certinho (muda no celular).
@@ -2661,8 +2922,11 @@ renderMenuBrands();
 renderMenuCategoryList();
 renderCatStrip();
 renderHero();
+state.cart = loadCart();
 renderGrid();
 renderCartBadge();
+restoreSession();
+route();
 </script>
 </body>
 </html>

@@ -237,17 +237,39 @@ header.topbar{
 }
 
 /* ---------- CATEGORY STRIP ---------- */
-.cat-strip{
-  display:flex; gap:10px; padding:22px 28px; overflow-x:auto;
-  border-bottom:1px solid var(--line); position:sticky; top:var(--header-h, 76px); z-index:40;
-  background:var(--bg);
+/* "Busque por categoria": círculos com foto/ícone de cada categoria */
+.cat-section{ padding:34px 28px 26px; border-bottom:1px solid var(--line); }
+.cat-section h2{
+  font-family:var(--display); font-size:24px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:22px;
 }
-.cat-pill{
-  flex-shrink:0; padding:9px 18px; border-radius:20px; border:1px solid var(--line);
-  font-size:13px; font-weight:600; color:var(--muted); background:var(--surface);
-  transition:all .15s;
+.cat-circles{ display:flex; gap:26px; overflow-x:auto; padding:6px 6px 8px; margin:0 -6px; scrollbar-width:none; }
+.cat-circles::-webkit-scrollbar{ display:none; }
+.cat-circle{
+  flex-shrink:0; width:112px; background:transparent; color:var(--muted);
+  display:flex; flex-direction:column; align-items:center; gap:12px; transition:color .15s;
 }
-.cat-pill.active, .cat-pill:hover{ border-color:var(--lime); color:var(--lime); }
+.cat-circle-img{
+  width:104px; height:104px; border-radius:50%; overflow:hidden;
+  background:var(--surface-2); border:2px solid var(--line);
+  display:flex; align-items:center; justify-content:center;
+  transition:border-color .15s, transform .15s;
+}
+.cat-circle-img img{ width:100%; height:100%; object-fit:cover; display:block; }
+.cat-circle-img .tub{ width:40px; height:52px; border-radius:5px 5px 9px 9px; }
+.cat-circle-img .tub::after{ height:9px; border-radius:5px 5px 0 0; }
+.cat-circle-label{ font-size:13px; font-weight:700; text-align:center; line-height:1.25; }
+.cat-circle:hover .cat-circle-img{ border-color:var(--lime); transform:translateY(-3px); }
+.cat-circle:hover, .cat-circle.active{ color:var(--lime); }
+.cat-circle.active .cat-circle-img{ border-color:var(--lime); box-shadow:0 0 0 4px rgba(198,255,61,0.12); }
+@media (max-width:640px){
+  .cat-section{ padding:26px 16px 20px; }
+  .cat-section h2{ font-size:20px; margin-bottom:16px; }
+  .cat-circles{ gap:14px; margin:0 -16px; padding:6px 16px 8px; }
+  .cat-circle{ width:84px; gap:9px; }
+  .cat-circle-img{ width:78px; height:78px; }
+  .cat-circle-img .tub{ width:30px; height:40px; }
+  .cat-circle-label{ font-size:11.5px; }
+}
 
 .cat-item{ position:relative; flex-shrink:0; display:flex; align-items:stretch; }
 .cat-pill-btn{
@@ -630,8 +652,11 @@ footer{ border-top:1px solid var(--line); padding:40px 28px; margin-top:auto; }
     <div class="hero-inner" id="heroInner"></div>
   </section>
 
-  <!-- CATEGORY STRIP -->
-  <div class="cat-strip" id="catStrip"></div>
+  <!-- BUSQUE POR CATEGORIA -->
+  <section class="cat-section">
+    <h2>Busque por categoria</h2>
+    <div class="cat-circles" id="catStrip"></div>
+  </section>
 
   <!-- FILTERS -->
   <div class="filter-bar">
@@ -809,12 +834,16 @@ const MOCK_ORDERS = {
 };
 const TRACKING_STEPS = ["Pedido confirmado","Em separação","Saiu para entrega","Entregue"];
 
+// img: quando tiver a foto da categoria, coloque o caminho aqui
+// (ex: img:"img/whey.jpg", com o arquivo dentro da pasta public/img).
+// Enquanto estiver vazio, aparece um potinho colorido no lugar.
+// color: cor do potinho provisório.
 const CATEGORIES = [
-  {id:"whey", label:"Whey Protein"},
-  {id:"creatina", label:"Creatina"},
-  {id:"pretreino", label:"Pré-treino"},
-  {id:"hipercalorico", label:"Hipercalórico"},
-  {id:"vitaminas", label:"Vitaminas"},
+  {id:"whey", label:"Whey Protein", img:"", color:"#C6FF3D"},
+  {id:"creatina", label:"Creatina", img:"", color:"#4FD6C6"},
+  {id:"pretreino", label:"Pré-treino", img:"", color:"#FF5B3C"},
+  {id:"hipercalorico", label:"Hipercalórico", img:"", color:"#FF9A4F"},
+  {id:"vitaminas", label:"Vitaminas", img:"", color:"#E77FD1"},
 ];
 
 const FLAVORS = ["Chocolate","Baunilha","Morango","Cookies & Cream","Sem sabor"];
@@ -1163,8 +1192,14 @@ document.addEventListener('click', (e)=>{
 /* ================= CATEGORY STRIP + GRID ================= */
 function renderCatStrip(){
   const el = document.getElementById('catStrip');
-  const chips = [{id:'todos', label:'Todos'}, ...CATEGORIES];
-  el.innerHTML = chips.map(c=>`<button class="cat-pill ${state.category===c.id?'active':''}" onclick="filterCategory('${c.id}')">${c.label}</button>`).join('');
+  const items = [{id:'todos', label:'Todos os produtos', img:'', color:'#F4F4EF'}, ...CATEGORIES];
+  el.innerHTML = items.map(c=>`
+    <button class="cat-circle ${state.category===c.id?'active':''}" onclick="filterCategory('${c.id}'); document.getElementById('gridSection').scrollIntoView({behavior:'smooth'});">
+      <span class="cat-circle-img">
+        ${c.img ? `<img src="${c.img}" alt="${c.label}">` : `<span class="tub" style="background:${c.color};"></span>`}
+      </span>
+      <span class="cat-circle-label">${c.label}</span>
+    </button>`).join('');
 }
 
 /* ================= FILTERS ================= */

@@ -83,9 +83,43 @@ header.topbar{
 }
 .dots-trigger span{ width:20px; height:2px; background:var(--text); border-radius:1px; }
 
+/* ícones com legenda embaixo (rastreio e perfil) */
+.icon-labeled{
+  background:transparent; color:var(--text);
+  display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:4px 8px; border-radius:var(--radius); transition:background .15s;
+}
+.icon-labeled:hover{ background:var(--surface-2); }
+.icon-labeled .ilabel{ font-size:10.5px; font-weight:600; color:var(--muted); white-space:nowrap; transition:color .15s; }
+.icon-labeled:hover .ilabel{ color:var(--lime); }
+
+/* estrela de favoritos (no card e na página do produto) */
+.fav-btn{
+  position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:50%;
+  background:rgba(14,15,15,0.55); color:var(--muted);
+  display:flex; align-items:center; justify-content:center; transition:color .15s, transform .15s;
+}
+.fav-btn:hover{ transform:scale(1.1); color:var(--lime); }
+.fav-btn.on{ color:var(--lime); }
+.fav-btn.on svg, .pm-fav-btn.on svg{ fill:currentColor; }
+.pm-fav-btn{
+  display:inline-flex; align-items:center; gap:8px; margin-bottom:20px;
+  background:transparent; border:1px solid var(--line); color:var(--text);
+  padding:9px 14px; border-radius:var(--radius); font-size:13px; font-weight:700; transition:all .15s;
+}
+.pm-fav-btn:hover, .pm-fav-btn.on{ border-color:var(--lime); color:var(--lime); }
+
+/* busca de rastreio */
+.track-search-row{ display:flex; gap:8px; }
+.track-search-row input{
+  flex:1; min-width:0; background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius);
+  color:var(--text); padding:12px; font-size:14px; outline:none; font-family:var(--mono); text-transform:uppercase;
+}
+.track-search-row input:focus{ border-color:var(--lime); }
+
 /* ---------- USER MENU ---------- */
 .user-panel{
-  position:absolute; top:60px; right:28px; width:280px; background:var(--surface);
+  position:absolute; top:calc(100% + 12px); right:0; width:280px; background:var(--surface);
   border:1px solid var(--line); border-radius:8px; z-index:91; display:none;
   box-shadow:0 12px 30px rgba(0,0,0,0.4); overflow:hidden;
 }
@@ -205,7 +239,7 @@ header.topbar{
 /* ---------- CATEGORY STRIP ---------- */
 .cat-strip{
   display:flex; gap:10px; padding:22px 28px; overflow-x:auto;
-  border-bottom:1px solid var(--line); position:sticky; top:73px; z-index:40;
+  border-bottom:1px solid var(--line); position:sticky; top:var(--header-h, 76px); z-index:40;
   background:var(--bg);
 }
 .cat-pill{
@@ -528,6 +562,11 @@ footer{ border-top:1px solid var(--line); padding:40px 28px; margin-top:auto; }
 .hidden{ display:none !important; }
 @media (max-width:640px){
   .search-box{ display:none; }
+  header.topbar{ padding:12px 14px; }
+  .brand{ font-size:19px; }
+  .top-actions{ gap:4px; }
+  .icon-labeled{ padding:4px 4px; }
+  .icon-labeled .ilabel{ font-size:9px; white-space:normal; text-align:center; max-width:62px; line-height:1.15; }
   .form-grid-2, .form-grid-3, .pay-methods{ grid-template-columns:1fr 1fr; }
 }
 </style>
@@ -548,10 +587,19 @@ footer{ border-top:1px solid var(--line); padding:40px 28px; margin-top:auto; }
       <input type="text" id="searchInput" placeholder="Buscar whey, creatina, marca..." oninput="doSearch(this.value)">
     </div>
     <div class="top-actions" style="position:relative;">
-      <button class="icon-btn" onclick="toggleUserPanel()" aria-label="Conta">
+      <button class="icon-labeled" onclick="openTrackingSearch()" aria-label="Acompanhar pedido">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 4h13v12H1z"/><path d="M14 9h4l3 3v4h-7z"/><circle cx="6" cy="18.5" r="2"/><circle cx="17.5" cy="18.5" r="2"/></svg>
+        <span class="ilabel">Acompanhar pedido</span>
+      </button>
+      <button class="icon-labeled" onclick="toggleUserPanel()" aria-label="Acessar meu perfil">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="ilabel">Acessar meu perfil</span>
       </button>
       <div class="user-panel" id="userPanel"></div>
+      <button class="icon-btn" onclick="openFavorites()" aria-label="Favoritos">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+        <span class="cart-badge" id="favBadge" style="display:none;">0</span>
+      </button>
       <button class="icon-btn" onclick="openCart()" aria-label="Carrinho">
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 2-1.58l1.65-7.42H5.12"/></svg>
         <span class="cart-badge" id="cartBadge">0</span>
@@ -668,6 +716,16 @@ footer{ border-top:1px solid var(--line); padding:40px 28px; margin-top:auto; }
     </div>
     <div class="drawer-body" id="cartBody"></div>
     <div class="drawer-foot" id="cartFoot"></div>
+  </aside>
+
+  <!-- FAVORITES DRAWER -->
+  <div class="drawer-overlay" id="favOverlay" onclick="closeFavorites()"></div>
+  <aside class="drawer" id="favDrawer">
+    <div class="drawer-head">
+      <h3>Favoritos</h3>
+      <button class="icon-btn" onclick="closeFavorites()">&times;</button>
+    </div>
+    <div class="drawer-body" id="favBody"></div>
   </aside>
 
   <!-- AUTH MODAL -->
@@ -852,6 +910,7 @@ const state = {
   filters: { priceMin:null, priceMax:null, brands:[], weights:[] },
   coupon: null,
   authToken: null,
+  favorites: [], // ids dos produtos favoritados
 };
 
 /* ================= RENDER HELPERS ================= */
@@ -868,6 +927,7 @@ function starRow(rating, size=13){
   }
   return html;
 }
+const STAR_ICON = `<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.27 5.82 21 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>`;
 function fmtBRL(v){ return v.toLocaleString('pt-BR',{minimumFractionDigits:2, maximumFractionDigits:2}); }
 
 function tubHTML(brand, size='card'){
@@ -961,7 +1021,7 @@ function startHeroCycle(){
         </div>
       </div>
     `;
-  }, 3500);
+  }, 7000); // tempo (em milissegundos) que cada texto fica na tela
 }
 
 /* ================= SEARCH ================= */
@@ -1095,7 +1155,7 @@ function closeTracking(){ document.getElementById('trackingOverlay').classList.r
 document.addEventListener('click', (e)=>{
   const panel = document.getElementById('userPanel');
   if(!panel) return;
-  if(panel.classList.contains('open') && !panel.contains(e.target) && !e.target.closest('.top-actions .icon-btn')){
+  if(panel.classList.contains('open') && !panel.contains(e.target) && !e.target.closest('.top-actions button')){
     panel.classList.remove('open');
   }
 });
@@ -1166,6 +1226,7 @@ function renderGrid(){
     <div class="card" onclick="openProduct(${p.id})">
       <div class="card-art">
         ${p.oldPrice ? '<div class="card-badge">OFERTA</div>' : ''}
+        <button class="fav-btn ${isFavorite(p.id)?'on':''}" onclick="event.stopPropagation(); toggleFavorite(${p.id})" aria-label="Favoritar">${STAR_ICON}</button>
         ${tubHTML(p.brand)}
       </div>
       <div class="card-body">
@@ -1216,6 +1277,7 @@ function renderProductModal(){
         <h2 class="pm-name">${p.name}</h2>
         <div class="pm-rating-row">${starRow(p.rating,15)}<span class="count">${p.rating} · ${p.ratingCount} avaliações</span></div>
         <div class="pm-price">R$ ${fmtBRL(p.price)} ${p.oldPrice?`<small style="text-decoration:line-through;">R$ ${fmtBRL(p.oldPrice)}</small>`:''}</div>
+        <button class="pm-fav-btn ${isFavorite(p.id)?'on':''}" onclick="toggleFavorite(${p.id})">${STAR_ICON} ${isFavorite(p.id)?'Nos seus favoritos':'Adicionar aos favoritos'}</button>
 
         <span class="field-label">Sabor</span>
         <div class="flavor-row" id="flavorRow">
@@ -1357,6 +1419,96 @@ function renderCart(){
     <div class="total-row grand"><span>Total</span><span>R$ ${fmtBRL(total)}</span></div>
     <button class="btn-primary" style="width:100%;" onclick="startCheckout()">Finalizar compra</button>
   `;
+}
+
+/* ================= FAVORITOS ================= */
+// Os favoritos ficam guardados no próprio navegador (localStorage), então
+// continuam lá mesmo se a pessoa fechar a página. Mais pra frente dá pra
+// salvar no banco de dados, ligado à conta.
+const FAV_KEY = 'next_favoritos';
+function loadFavorites(){
+  try{
+    const v = JSON.parse(localStorage.getItem(FAV_KEY) || '[]');
+    return Array.isArray(v) ? v.filter(id=>PRODUCTS.some(p=>p.id===id)) : [];
+  }catch(e){ return []; }
+}
+function saveFavorites(){ try{ localStorage.setItem(FAV_KEY, JSON.stringify(state.favorites)); }catch(e){} }
+function isFavorite(id){ return state.favorites.includes(id); }
+function toggleFavorite(id){
+  if(isFavorite(id)) state.favorites = state.favorites.filter(x=>x!==id);
+  else state.favorites.push(id);
+  saveFavorites();
+  renderFavBadge();
+  renderGrid();
+  if(document.getElementById('productModalOverlay').classList.contains('open')) renderProductModal();
+  if(document.getElementById('favDrawer').classList.contains('open')) renderFavorites();
+}
+function renderFavBadge(){
+  const b = document.getElementById('favBadge');
+  b.textContent = state.favorites.length;
+  b.style.display = state.favorites.length ? 'flex' : 'none';
+}
+function openFavorites(){ renderFavorites(); document.getElementById('favOverlay').classList.add('open'); document.getElementById('favDrawer').classList.add('open'); }
+function closeFavorites(){ document.getElementById('favOverlay').classList.remove('open'); document.getElementById('favDrawer').classList.remove('open'); }
+function renderFavorites(){
+  const body = document.getElementById('favBody');
+  if(!state.favorites.length){
+    body.innerHTML = `<div class="empty-cart">Você ainda não tem favoritos.<br>Toque na estrela de um produto para salvar aqui.</div>`;
+    return;
+  }
+  body.innerHTML = state.favorites.map(id=>{
+    const p = PRODUCTS.find(x=>x.id===id);
+    return `
+      <div class="cart-item">
+        ${tubHTML(p.brand)}
+        <div class="ci-info">
+          <div class="ci-name">${p.name}</div>
+          <div class="ci-meta">${p.brand}</div>
+          <div class="ci-row">
+            <span class="ci-price">R$ ${fmtBRL(p.price)}</span>
+            <button class="ci-remove" onclick="toggleFavorite(${p.id})">Remover</button>
+          </div>
+          <div style="display:flex; gap:8px; margin-top:10px;">
+            <button class="btn-outline-lime" style="flex:1; padding:8px; font-size:11px;" onclick="closeFavorites(); openProduct(${p.id})">Ver produto</button>
+            <button class="btn-primary" style="flex:1; padding:8px; font-size:11px;" onclick="quickAdd(${p.id})">Pôr na sacola</button>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+/* ================= ACOMPANHAR PEDIDO ================= */
+function openTrackingSearch(){
+  closeUserPanel();
+  const myOrders = state.user ? [...MOCK_ORDERS.andamento, ...MOCK_ORDERS.concluidos] : [];
+  document.getElementById('trackingContent').innerHTML = `
+    <h2>Acompanhar pedido</h2>
+    <p style="color:var(--muted); font-size:13.5px; margin:6px 0 20px; line-height:1.6;">Digite o código do pedido que enviamos para o seu e-mail na hora da compra (ex: SUP-8K2N1Q).</p>
+    <div class="track-search-row">
+      <input id="trackCodeInput" placeholder="SUP-XXXXXX" onkeydown="if(event.key==='Enter') searchTracking()">
+      <button class="btn-primary" style="padding:12px 18px;" onclick="searchTracking()">Rastrear</button>
+    </div>
+    <div class="field-error" id="trackCodeError">Não encontramos um pedido com esse código. Confira e tente de novo.</div>
+    ${myOrders.length ? `
+      <span class="field-label" style="margin-top:28px;">Seus pedidos</span>
+      ${myOrders.map(o=>`
+        <div class="order-mini">
+          <div class="oname">${o.name}</div>
+          <div class="ostatus">${o.status}</div>
+          <div class="oactions"><button onclick="openTracking('${o.code}')">Rastrear pedido</button></div>
+        </div>`).join('')}
+    ` : (state.user ? '' : `
+      <p style="color:var(--muted-2); font-size:12.5px; margin-top:22px;">Tem conta? <a style="color:var(--lime); cursor:pointer; font-weight:700;" onclick="closeTracking(); openAuth();">Entre</a> para ver todos os seus pedidos.</p>
+    `)}
+  `;
+  document.getElementById('trackingOverlay').classList.add('open');
+  setTimeout(()=>{ const i = document.getElementById('trackCodeInput'); if(i) i.focus(); }, 50);
+}
+function searchTracking(){
+  const code = document.getElementById('trackCodeInput').value.trim().toUpperCase();
+  const found = [...MOCK_ORDERS.andamento, ...MOCK_ORDERS.concluidos].find(o=>o.code===code);
+  if(!found){ document.getElementById('trackCodeError').classList.add('show'); return; }
+  openTracking(code);
 }
 
 /* ================= AUTH ================= */
@@ -1776,6 +1928,15 @@ function finishOrder(){
 }
 
 /* ================= INIT ================= */
+// A faixa de categorias "gruda" logo abaixo do topo; aqui medimos a altura
+// real do topo pra ela encaixar certinho (muda no celular).
+function syncHeaderHeight(){
+  document.documentElement.style.setProperty('--header-h', document.querySelector('header.topbar').offsetHeight + 'px');
+}
+syncHeaderHeight();
+window.addEventListener('resize', syncHeaderHeight);
+state.favorites = loadFavorites();
+renderFavBadge();
 renderMenuBrands();
 renderMenuCategoryList();
 renderCatStrip();

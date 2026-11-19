@@ -43,4 +43,17 @@ db.exec(`
   );
 `);
 
+// "contact_messages" guarda as mensagens enviadas pelo formulário da
+// página de Contato, pra equipe da loja ler e responder depois.
+db.exec(`
+  CREATE TABLE IF NOT EXISTS contact_messages (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    message TEXT NOT NULL,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+`);
+
 module.exports = db;

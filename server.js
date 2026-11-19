@@ -140,6 +140,32 @@ async function handleLogout(req, res) {
   sendJson(res, 200, { ok: true });
 }
 
+// Formulário da página de Contato: valida e guarda a mensagem no banco.
+// Pra ver as mensagens recebidas (por enquanto, direto no banco):
+//   node -e "console.table(require('./db').prepare('SELECT * FROM contact_messages ORDER BY id DESC').all())"
+const contactHits = new Map(); // limite simples: 5 mensagens por hora por pessoa
+async function handleContact(req, res) {
+  const ip = String(req.headers['x-forwarded-for'] || req.socket.remoteAddress || '').split(',')[0].trim();
+  const now = Date.now();
+  const recent = (contactHits.get(ip) || []).filter(t => now - t < 60 * 60 * 1000);
+  if (recent.length >= 5) return sendJson(res, 429, { error: 'Você já mandou várias mensagens agora. Tente de novo mais tarde ou chame no WhatsApp.' });
+
+  const body = await readJsonBody(req);
+  const name = String(body.name || '').trim().slice(0, 120);
+  const email = String(body.email || '').trim().toLowerCase().slice(0, 160);
+  const phone = String(body.phone || '').replace(/\D/g, '').slice(0, 13);
+  const message = String(body.message || '').trim().slice(0, 3000);
+
+  if (!name) return sendJson(res, 400, { error: 'Preencha seu nome.' });
+  if (!isValidEmail(email)) return sendJson(res, 400, { error: 'E-mail inválido.' });
+  if (phone && phone.length < 10) return sendJson(res, 400, { error: 'Telefone incompleto: use DDD + número.' });
+  if (message.length < 5) return sendJson(res, 400, { error: 'Escreva sua mensagem.' });
+
+  db.prepare(`INSERT INTO contact_messages (name, email, phone, message) VALUES (?, ?, ?, ?)`).run(name, email, phone || null, message);
+  recent.push(now); contactHits.set(ip, recent);
+  sendJson(res, 201, { ok: true });
+}
+
 // ---------------------------------------------------------------------
 // Servidor HTTP: decide qual função chamar de acordo com o caminho
 // ---------------------------------------------------------------------
@@ -162,6 +188,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && req.url === '/api/logout') return await handleLogout(req, res);
     if (req.method === 'GET' && req.url === '/api/me') return await handleMe(req, res);
     if (req.method === 'POST' && req.url === '/api/chat') return await handleChat(req, res, { readJsonBody, sendJson });
+    if (req.method === 'POST' && req.url === '/api/contact') return await handleContact(req, res);
 
     // Qualquer outra rota GET: tenta servir como arquivo estático do site
     // (o index.html e, futuramente, outros arquivos da pasta "public").

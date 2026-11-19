@@ -18,6 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const db = require('./db');
 const { hashPassword, verifyPassword, generateToken } = require('./auth');
+const { handleChat } = require('./chat');
 
 // No Render (e outros serviços), a porta vem da variável PORT.
 const PORT = process.env.PORT || 3000;
@@ -160,6 +161,7 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && req.url === '/api/login') return await handleLogin(req, res);
     if (req.method === 'POST' && req.url === '/api/logout') return await handleLogout(req, res);
     if (req.method === 'GET' && req.url === '/api/me') return await handleMe(req, res);
+    if (req.method === 'POST' && req.url === '/api/chat') return await handleChat(req, res, { readJsonBody, sendJson });
 
     // Qualquer outra rota GET: tenta servir como arquivo estático do site
     // (o index.html e, futuramente, outros arquivos da pasta "public").

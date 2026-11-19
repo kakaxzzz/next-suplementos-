@@ -10,3 +10,7 @@ services:
     envVars:
       - key: NODE_VERSION
         value: "22"
+      # Chave da IA do chat (veja chat.js). O Render pede o valor na
+      # criação; nunca coloque a chave escrita aqui no arquivo.
+      - key: AI_API_KEY
+        sync: false

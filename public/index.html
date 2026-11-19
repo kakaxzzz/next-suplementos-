@@ -589,6 +589,65 @@ footer{ border-top:1px solid var(--line); padding:40px 28px; margin-top:auto; }
 .footer-badges span{ border:1px solid var(--line); padding:6px 10px; border-radius:20px; }
 .footer-note{ color:var(--muted-2); font-size:12px; max-width:520px; line-height:1.6; margin-top:14px; }
 
+/* ---------- CHAT "PRECISA DE AJUDA?" ---------- */
+.help-btn{
+  position:fixed; right:22px; bottom:22px; z-index:70;
+  display:flex; align-items:center; gap:10px;
+  background:var(--lime); color:#0E0F0F; padding:13px 20px 13px 16px; border-radius:30px;
+  font-weight:800; font-size:14px; box-shadow:0 10px 28px rgba(0,0,0,0.45);
+  transition:transform .15s;
+}
+.help-btn:hover{ transform:translateY(-2px); }
+.help-btn.hide{ display:none; }
+.chat-panel{
+  position:fixed; right:22px; bottom:22px; z-index:75;
+  width:370px; height:540px; max-height:calc(100vh - 44px);
+  background:var(--surface); border:1px solid var(--line); border-radius:14px;
+  box-shadow:0 18px 50px rgba(0,0,0,0.55); overflow:hidden;
+  display:none; flex-direction:column; animation:pop .2s ease;
+}
+.chat-panel.open{ display:flex; }
+.chat-head{
+  display:flex; align-items:center; gap:12px; padding:14px 16px;
+  background:var(--surface-2); border-bottom:1px solid var(--line);
+}
+.chat-avatar{
+  width:36px; height:36px; border-radius:50%; background:var(--lime); color:#0E0F0F;
+  display:flex; align-items:center; justify-content:center; font-family:var(--display); font-size:17px; flex-shrink:0;
+}
+.chat-title{ font-weight:800; font-size:14.5px; }
+.chat-sub{ font-size:11.5px; color:var(--lime); display:flex; align-items:center; gap:5px; margin-top:1px; }
+.chat-sub::before{ content:''; width:7px; height:7px; border-radius:50%; background:var(--lime); }
+.chat-close{ margin-left:auto; background:transparent; color:var(--muted); font-size:22px; width:32px; height:32px; border-radius:50%; }
+.chat-close:hover{ background:var(--surface); color:var(--text); }
+.chat-body{ flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; }
+.chat-msg{ max-width:85%; padding:10px 13px; border-radius:12px; font-size:13.5px; line-height:1.5; white-space:pre-wrap; word-wrap:break-word; }
+.chat-msg.bot{ background:var(--surface-2); color:var(--text); border-bottom-left-radius:4px; align-self:flex-start; }
+.chat-msg.user{ background:var(--lime); color:#0E0F0F; font-weight:500; border-bottom-right-radius:4px; align-self:flex-end; }
+.chat-msg.typing{ color:var(--muted); font-style:italic; }
+.chat-suggestions{ display:flex; flex-wrap:wrap; gap:6px; margin-top:2px; }
+.chat-suggestions button{
+  background:transparent; border:1px solid var(--line); color:var(--text);
+  padding:7px 11px; border-radius:16px; font-size:12px; transition:all .15s;
+}
+.chat-suggestions button:hover{ border-color:var(--lime); color:var(--lime); }
+.chat-form{ display:flex; gap:8px; padding:12px; border-top:1px solid var(--line); }
+.chat-form input{
+  flex:1; min-width:0; background:var(--surface-2); border:1px solid var(--line); border-radius:22px;
+  color:var(--text); padding:11px 15px; font-size:13.5px; outline:none;
+}
+.chat-form input:focus{ border-color:var(--lime); }
+.chat-send{
+  width:42px; height:42px; border-radius:50%; background:var(--lime); color:#0E0F0F; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+}
+.chat-send:disabled{ opacity:.5; cursor:default; }
+@media (max-width:640px){
+  .help-btn{ right:14px; bottom:14px; padding:11px 16px 11px 13px; font-size:13px; }
+  .chat-panel{ right:0; left:0; bottom:0; width:auto; height:82vh; max-height:none; border-radius:16px 16px 0 0; }
+  .chat-form input{ font-size:16px; } /* evita o zoom automático do iPhone ao digitar */
+}
+
 .hidden{ display:none !important; }
 @media (max-width:640px){
   .search-box{ display:none; }
@@ -794,6 +853,29 @@ footer{ border-top:1px solid var(--line); padding:40px 28px; margin-top:auto; }
       <button class="modal-close" onclick="closeTracking()">&times;</button>
       <div class="tracking-wrap" id="trackingContent"></div>
     </div>
+  </div>
+
+  <!-- CHAT "PRECISA DE AJUDA?" -->
+  <button class="help-btn" id="helpBtn" onclick="openChat()">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12z"/></svg>
+    Precisa de ajuda?
+  </button>
+  <div class="chat-panel" id="chatPanel" role="dialog" aria-label="Atendimento">
+    <div class="chat-head">
+      <div class="chat-avatar">N</div>
+      <div>
+        <div class="chat-title">Atendimento NEXT</div>
+        <div class="chat-sub">Assistente virtual · online</div>
+      </div>
+      <button class="chat-close" onclick="closeChat()" aria-label="Fechar">&times;</button>
+    </div>
+    <div class="chat-body" id="chatBody"></div>
+    <form class="chat-form" onsubmit="event.preventDefault(); sendChat();">
+      <input id="chatInput" placeholder="Digite sua dúvida..." maxlength="600" autocomplete="off">
+      <button class="chat-send" id="chatSend" type="submit" aria-label="Enviar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg>
+      </button>
+    </form>
   </div>
 
   <!-- CHECKOUT OVERLAY (full view) -->
@@ -1968,6 +2050,103 @@ function finishOrder(){
   renderCartBadge();
   state.checkoutStep = 5;
   renderCheckout();
+}
+
+/* ================= CHAT "PRECISA DE AJUDA?" ================= */
+// A conversa vai pro servidor (/api/chat), que repassa pra IA (veja chat.js).
+// Se o servidor não responder ou a IA ainda não estiver configurada,
+// o chat usa as respostas prontas de chatFallback() logo abaixo.
+const chat = { messages: [], busy: false, started: false };
+const CHAT_SUGGESTIONS = ["Formas de pagamento","Prazo de entrega","Como rastrear meu pedido?","Qual whey escolher?"];
+
+function openChat(){
+  document.getElementById('chatPanel').classList.add('open');
+  document.getElementById('helpBtn').classList.add('hide');
+  if(!chat.started){
+    chat.started = true;
+    addChatMsg('bot', 'Olá! Sou o assistente virtual da NEXT SUPLEMENTOS. Posso tirar dúvidas sobre produtos, pagamento, entrega e pedidos. Como posso ajudar?', true);
+  }
+  setTimeout(()=>document.getElementById('chatInput').focus(), 50);
+}
+function closeChat(){
+  document.getElementById('chatPanel').classList.remove('open');
+  document.getElementById('helpBtn').classList.remove('hide');
+}
+function escapeHTML(s){ return s.replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+function addChatMsg(role, text, withSuggestions){
+  const body = document.getElementById('chatBody');
+  body.querySelectorAll('.chat-suggestions').forEach(el=>el.remove());
+  const div = document.createElement('div');
+  div.className = 'chat-msg ' + role;
+  div.innerHTML = escapeHTML(text);
+  body.appendChild(div);
+  if(withSuggestions){
+    const sug = document.createElement('div');
+    sug.className = 'chat-suggestions';
+    sug.innerHTML = CHAT_SUGGESTIONS.map(s=>`<button type="button">${s}</button>`).join('');
+    sug.querySelectorAll('button').forEach(b=>b.onclick = ()=>sendChat(b.textContent));
+    body.appendChild(sug);
+  }
+  body.scrollTop = body.scrollHeight;
+  return div;
+}
+async function sendChat(preset){
+  const input = document.getElementById('chatInput');
+  const text = (preset || input.value).trim();
+  if(!text || chat.busy) return;
+  input.value = '';
+  addChatMsg('user', text);
+  chat.messages.push({ role:'user', content:text });
+  chat.busy = true;
+  document.getElementById('chatSend').disabled = true;
+  const typing = addChatMsg('bot typing', 'digitando...');
+
+  let reply = null;
+  try{
+    const res = await fetch(`${API_BASE}/api/chat`, {
+      method:'POST',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify({
+        messages: chat.messages.slice(-10),
+        catalog: PRODUCTS.map(p=>({ name:p.name, brand:p.brand, category:(CATEGORIES.find(c=>c.id===p.cat)||{}).label, price:p.price })),
+      })
+    });
+    const data = await res.json().catch(()=>({}));
+    if(res.ok && data.reply) reply = data.reply;
+    else if(data.error && data.error!=='not_configured') reply = data.error;
+  }catch(err){ /* servidor fora do ar: usa as respostas prontas */ }
+  if(!reply) reply = chatFallback(text);
+
+  typing.remove();
+  addChatMsg('bot', reply);
+  chat.messages.push({ role:'assistant', content:reply });
+  chat.busy = false;
+  document.getElementById('chatSend').disabled = false;
+  input.focus();
+}
+// Respostas prontas, usadas enquanto a IA não estiver ligada.
+function chatFallback(q){
+  const t = q.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+  const has = (...w)=>w.some(x=>t.includes(x));
+  if(has('pagamento','pagar','pix','cartao','credito','debito','boleto'))
+    return 'Aceitamos Pix, cartão de crédito e cartão de débito. Você escolhe a forma de pagamento no último passo da compra.';
+  if(has('rastre','acompanhar','meu pedido','codigo','onde esta'))
+    return 'Para acompanhar seu pedido, clique em "Acompanhar pedido" (ícone de caminhão) no topo do site e digite o código que enviamos por e-mail, no formato SUP-XXXXXX.';
+  if(has('frete','entrega','prazo','chega','demora','envio'))
+    return 'Temos 3 opções de frete: Econômico (7 a 10 dias úteis, R$ 14,90), Padrão (4 a 6 dias úteis, R$ 24,90) e Expresso (1 a 2 dias úteis, R$ 39,90). O frete é calculado pelo CEP durante a compra.';
+  if(has('cupom','desconto','promo'))
+    return 'Você pode usar cupons de influenciadores parceiros no passo 3 da compra. Os produtos em promoção aparecem com a etiqueta OFERTA.';
+  if(has('troca','devol','cancel'))
+    return 'Pedidos que ainda não saíram para entrega podem ser cancelados em "Acessar meu perfil" > Pedidos em andamento. Para trocas e devoluções, fale com a nossa equipe.';
+  if(has('conta','login','cadastr','senha','entrar'))
+    return 'Para criar sua conta ou entrar, clique em "Acessar meu perfil" no topo do site.';
+  if(has('whey','proteina'))
+    return 'O whey ajuda na recuperação e na manutenção da massa muscular. Temos opções concentrado e isolado; o isolado tem mais proteína por dose e menos lactose. Veja todos na categoria Whey Protein. Para saber quanto tomar, o ideal é conversar com um nutricionista.';
+  if(has('creatina'))
+    return 'A creatina ajuda a dar mais energia em treinos de alta intensidade. Temos opções a partir de R$ 79,90 na categoria Creatina. Para saber a dose ideal para você, consulte um nutricionista.';
+  if(has('pre-treino','pre treino','pretreino'))
+    return 'Os pré-treinos ajudam no foco e na disposição para treinar. Eles têm cafeína, então evite tomar à noite. Veja as opções na categoria Pré-treino.';
+  return 'Ainda estou aprendendo e não consegui entender sua dúvida. Posso ajudar com formas de pagamento, prazo de entrega, rastreio de pedido e informações sobre os produtos.';
 }
 
 /* ================= INIT ================= */

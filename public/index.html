@@ -589,6 +589,63 @@ footer{ border-top:1px solid var(--line); padding:40px 28px; margin-top:auto; }
 .footer-badges span{ border:1px solid var(--line); padding:6px 10px; border-radius:20px; }
 .footer-note{ color:var(--muted-2); font-size:12px; max-width:520px; line-height:1.6; margin-top:14px; }
 
+/* ---------- NOVIDADES / REDES SOCIAIS ---------- */
+.social-section{
+  display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); gap:48px; align-items:center;
+  padding:56px 28px; border-top:1px solid var(--line);
+}
+.social-carousel{ position:relative; min-width:0; }
+.social-viewport{ overflow:hidden; border-radius:10px; border:1px solid var(--line); aspect-ratio:16/10; background:var(--surface-2); }
+.social-track{ display:flex; height:100%; transition:transform .5s cubic-bezier(.16,1,.3,1); }
+.social-slide{ flex:0 0 100%; height:100%; position:relative; overflow:hidden; }
+.social-slide img{ width:100%; height:100%; object-fit:cover; display:block; }
+.social-slide-ph{
+  width:100%; height:100%; display:flex; align-items:center; justify-content:center; gap:34px; padding:24px;
+}
+.social-slide-ph .tub{ width:120px; height:156px; border-radius:12px 12px 20px 20px; flex-shrink:0; }
+.social-slide-ph .tub::after{ height:24px; border-radius:12px 12px 0 0; }
+.social-slide-ph .tub-label{ font-size:17px; }
+.social-slide-ph h3{ font-family:var(--display); font-size:clamp(26px, 3.4vw, 44px); line-height:.95; text-transform:uppercase; max-width:260px; }
+.social-slide-ph h3 span{ display:block; font-family:var(--mono); font-size:11px; letter-spacing:2.5px; color:var(--lime); margin-bottom:10px; }
+.social-arrow{
+  position:absolute; top:50%; transform:translateY(-50%); z-index:2;
+  width:40px; height:40px; border-radius:50%; background:var(--bg); color:var(--text);
+  border:1px solid var(--line); display:flex; align-items:center; justify-content:center; transition:all .15s;
+}
+.social-arrow:hover{ border-color:var(--lime); color:var(--lime); }
+.social-arrow.prev{ left:-20px; }
+.social-arrow.next{ right:-20px; }
+.social-dots{ display:flex; justify-content:center; gap:8px; margin-top:14px; }
+.social-dots button{ width:8px; height:8px; border-radius:4px; background:var(--line); transition:all .2s; padding:0; }
+.social-dots button.active{ width:24px; background:var(--lime); }
+.social-eyebrow{
+  display:flex; align-items:center; gap:10px; font-family:var(--mono); color:var(--lime);
+  font-size:12.5px; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; margin-bottom:16px;
+}
+.social-info h2{ font-family:var(--display); font-size:clamp(26px, 3vw, 38px); line-height:1.05; text-transform:uppercase; margin-bottom:16px; }
+.social-info p{ color:var(--muted); font-size:15px; line-height:1.7; max-width:520px; }
+.social-buttons{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:30px; max-width:460px; }
+.social-btn{
+  display:flex; align-items:center; justify-content:center; gap:10px;
+  border:1px solid var(--lime); color:var(--lime); background:transparent;
+  padding:14px; border-radius:var(--radius); font-weight:800; font-size:13px; letter-spacing:1px; text-transform:uppercase;
+  transition:all .15s;
+}
+.social-btn:hover{ background:var(--lime); color:#0E0F0F; }
+@media (max-width:900px){
+  .social-section{ grid-template-columns:minmax(0,1fr); gap:34px; }
+  .social-arrow.prev{ left:10px; }
+  .social-arrow.next{ right:10px; }
+}
+@media (max-width:640px){
+  .social-section{ padding:40px 16px; }
+  .social-viewport{ aspect-ratio:4/3; }
+  .social-slide-ph{ gap:18px; padding:20px 58px; }
+  .social-slide-ph .tub{ width:78px; height:102px; }
+  .social-slide-ph .tub-label{ font-size:12px; }
+  .social-buttons{ grid-template-columns:1fr; max-width:none; }
+}
+
 /* ---------- CHAT "PRECISA DE AJUDA?" ---------- */
 .help-btn{
   position:fixed; right:22px; bottom:22px; z-index:70;
@@ -777,6 +834,38 @@ footer{ border-top:1px solid var(--line); padding:40px 28px; margin-top:auto; }
     </div>
     <div class="grid" id="productGrid"></div>
   </div>
+
+  <!-- NOVIDADES / REDES SOCIAIS -->
+  <section class="social-section">
+    <div class="social-carousel">
+      <button class="social-arrow prev" onclick="moveSocialSlide(-1)" aria-label="Imagem anterior">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </button>
+      <div class="social-viewport"><div class="social-track" id="socialTrack"></div></div>
+      <button class="social-arrow next" onclick="moveSocialSlide(1)" aria-label="Próxima imagem">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+      </button>
+      <div class="social-dots" id="socialDots"></div>
+    </div>
+    <div class="social-info">
+      <div class="social-eyebrow">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Novidades NEXT
+      </div>
+      <h2>Nas nossas redes sociais você fica sabendo de tudo primeiro</h2>
+      <p>Lançamentos, ofertas relâmpago, cupons exclusivos e dicas de treino e suplementação aparecem antes por lá. É o nosso canal direto com você: siga a NEXT e fique por dentro!</p>
+      <div class="social-buttons">
+        <a class="social-btn" id="instagramBtn" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+          Instagram
+        </a>
+        <a class="social-btn" id="facebookBtn" target="_blank" rel="noopener">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-1.56 19.88v-7H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v7A10 10 0 0 0 12 2z"/></svg>
+          Facebook
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- FOOTER -->
   <footer>
@@ -2052,6 +2141,46 @@ function finishOrder(){
   renderCheckout();
 }
 
+/* ================= NOVIDADES / REDES SOCIAIS ================= */
+// Links das redes sociais da loja (troque pelos endereços de verdade).
+const SOCIAL_LINKS = {
+  instagram: "https://www.instagram.com/",
+  facebook: "https://www.facebook.com/",
+};
+// Imagens do carrossel. Quando tiver as fotos, coloque o caminho em img
+// (ex: img:"img/novidade1.jpg", com o arquivo na pasta public/img).
+// Enquanto img estiver vazio, aparece um slide provisório com o texto abaixo.
+const SOCIAL_SLIDES = [
+  { img:"", tag:"Lançamento", title:"Chegou whey isolado novo", brand:"Shark Protein", bg:"linear-gradient(135deg,#1d2a4a,#0E0F0F 75%)" },
+  { img:"", tag:"Oferta relâmpago", title:"Creatina com preço de treino pesado", brand:"Integralmédica", bg:"linear-gradient(135deg,#123b36,#0E0F0F 75%)" },
+  { img:"", tag:"Só nas redes", title:"Cupons exclusivos toda semana", brand:"Max Titanium", bg:"linear-gradient(135deg,#2c3a0c,#0E0F0F 75%)" },
+];
+let socialIndex = 0, socialTimer = null;
+function renderSocial(){
+  document.getElementById('instagramBtn').href = SOCIAL_LINKS.instagram;
+  document.getElementById('facebookBtn').href = SOCIAL_LINKS.facebook;
+  document.getElementById('socialTrack').innerHTML = SOCIAL_SLIDES.map(s=>`
+    <div class="social-slide">
+      ${s.img ? `<img src="${s.img}" alt="${s.title}">` : `
+        <div class="social-slide-ph" style="background:${s.bg};">
+          ${tubHTML(s.brand)}
+          <h3><span>${s.tag}</span>${s.title}</h3>
+        </div>`}
+    </div>`).join('');
+  document.getElementById('socialDots').innerHTML = SOCIAL_SLIDES.map((_,i)=>
+    `<button onclick="goSocialSlide(${i})" aria-label="Imagem ${i+1}"></button>`).join('');
+  goSocialSlide(0);
+}
+function goSocialSlide(i){
+  socialIndex = (i + SOCIAL_SLIDES.length) % SOCIAL_SLIDES.length;
+  document.getElementById('socialTrack').style.transform = `translateX(-${socialIndex*100}%)`;
+  document.querySelectorAll('#socialDots button').forEach((d,k)=>d.classList.toggle('active', k===socialIndex));
+  // troca sozinho a cada 6 segundos; recomeça a contar quando a pessoa clica
+  clearInterval(socialTimer);
+  socialTimer = setInterval(()=>goSocialSlide(socialIndex+1), 6000);
+}
+function moveSocialSlide(d){ goSocialSlide(socialIndex + d); }
+
 /* ================= CHAT "PRECISA DE AJUDA?" ================= */
 // A conversa vai pro servidor (/api/chat), que repassa pra IA (veja chat.js).
 // Se o servidor não responder ou a IA ainda não estiver configurada,
@@ -2159,6 +2288,7 @@ syncHeaderHeight();
 window.addEventListener('resize', syncHeaderHeight);
 state.favorites = loadFavorites();
 renderFavBadge();
+renderSocial();
 renderMenuBrands();
 renderMenuCategoryList();
 renderCatStrip();
